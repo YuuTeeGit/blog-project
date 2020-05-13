@@ -20,3 +20,25 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+/* others */
+
+.postdate{
+    text-align: center;
+}
+
+.posttitle{
+    font-family: 'Balsamiq Sans', cursive;
+    font-size: 1.5em; 
+    text-align: center;   
+}
+
+.postcontent{
+    font-family: 'Montserrat';
+    font-size: 1.5em;
+}
+
+.btn-comment{
+    position: absolute;
+    right: 0px;
+}

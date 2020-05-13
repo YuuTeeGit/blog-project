@@ -48,7 +48,7 @@
                     </a>
                 {% endif %}
 
-                <p>{{comment.text|safe|linebreaks}}</p>
+                <p>{{comment.text|safe|linebreaks}}</p><!-- |safe をつけるとescapeされなくなる。 -->
                 <p>Posted By: {{comment.auther}}</p>
 
             {% endif %}
