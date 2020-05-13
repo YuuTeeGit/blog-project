@@ -36,9 +36,9 @@ class PostUpdateView(LoginRequiredMixin,UpdateView):
     form_class = PostForm
     model = Post
 
-class PostDeleteview(DeleteView):
+class PostDeleteView(DeleteView):
     model = Post
-    success_url = reverse_lazy('post_list')#urlをnameで指定できる。
+    success_url = reverse_lazy('blog:post_list')#urlをnameで指定できる。
 
 class DraftListView(LoginRequiredMixin,ListView):
     login_url = '/login/'
@@ -46,7 +46,7 @@ class DraftListView(LoginRequiredMixin,ListView):
     model = Post
 
     def get_queryset(self):#未公開の記事を返すクエリ
-        return Post.objects.filter(published_date__isnull=True).order_by('created_date')
+        return Post.objects.filter(published_date__isnull=True).order_by('create_date')
 
 
 ################################################
@@ -55,8 +55,8 @@ class DraftListView(LoginRequiredMixin,ListView):
 @login_required
 def post_publish(request,pk):
     post = get_object_or_404(Post,pk=pk)
-    post.publish
-    return redirect('post_detail',pk=pk)
+    post.publish()
+    return redirect('blog:post_detail',pk=pk)
 
 @login_required #Viewをログイン済みのユーザーにのみ制限する#https://wonderwall.hatenablog.com/entry/2018/03/25/180000
 def add_comment_to_post(request,pk):
@@ -67,7 +67,7 @@ def add_comment_to_post(request,pk):
             comment = form.save(commit=False)
             comment.post = post#postの紐付け
             comment.save()
-            return redirect('post_detail',pk=post.pk)
+            return redirect('blog:post_detail',pk=post.pk)
     else:
         form = CommentForm()
 
