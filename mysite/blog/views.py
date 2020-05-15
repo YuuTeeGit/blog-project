@@ -63,7 +63,8 @@ def add_comment_to_post(request,pk):
     post = get_object_or_404(Post,pk=pk)#ページが存在しなければ404を返すショートカット
     if request.method == 'POST':
         form = CommentForm(request.POST)
-        if form.is_valid():
+        
+        if form.is_valid():            
             comment = form.save(commit=False)
             comment.post = post#postの紐付け
             comment.save()
@@ -76,12 +77,13 @@ def add_comment_to_post(request,pk):
 @login_required
 def comment_approve(request,pk):
     comment = get_object_or_404(Comment,pk=pk)
+    post_pk = comment.post.pk
     comment.approve()
-    return redirect('post_detail',pk=post.pk)#COmmentModelのpost.pkを参照
+    return redirect('blog:post_detail',pk=post_pk.pk)#COmmentModelのpost.pkを参照
 
 @login_required
 def comment_remove(request,pk):
     comment = get_object_or_404(Comment,pk=pk)
     post_pk = comment.post.pk
     comment.delete()#Modelクラスに元々あるもの
-    return redirect('post_detail',pk=post_pk)
+    return redirect('blog:post_detail',pk=post_pk)
