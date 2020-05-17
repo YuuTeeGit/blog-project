@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404,redirect
 from blog.models import Post,Comment
 from blog.forms import PostForm,CommentForm
 from django.urls import reverse_lazy
@@ -36,9 +36,9 @@ class PostUpdateView(LoginRequiredMixin,UpdateView):
     form_class = PostForm
     model = Post
 
-class PostDeleteview(DeleteView):
+class PostDeleteView(DeleteView):
     model = Post
-    success_url = reverse_lazy('post_list')#urlをnameで指定できる。
+    success_url = reverse_lazy('blog:post_list')#urlをnameで指定できる。
 
 class DraftListView(LoginRequiredMixin,ListView):
     login_url = '/login/'
@@ -46,4 +46,47 @@ class DraftListView(LoginRequiredMixin,ListView):
     model = Post
 
     def get_queryset(self):#未公開の記事を返すクエリ
-        return Post.objects.filter(published_date__isnull=True).order_by('created_date')
+        return Post.objects.filter(published_date__isnull=True).order_by('create_date')
+
+
+################################################
+################################################
+
+
+
+
+@login_required
+def post_publish(request,pk):
+    post = get_object_or_404(Post,pk=pk)
+    post.publish()
+    return redirect('blog:post_detail',pk=pk)
+
+@login_required #Viewをログイン済みのユーザーにのみ制限する#https://wonderwall.hatenablog.com/entry/2018/03/25/180000
+def add_comment_to_post(request,pk):
+    post = get_object_or_404(Post,pk=pk)#ページが存在しなければ404を返すショートカット
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        
+        if form.is_valid():            
+            comment = form.save(commit=False)
+            comment.post = post#postの紐付け
+            comment.save()
+            return redirect('blog:post_detail',pk=post.pk)
+    else:
+        form = CommentForm()
+
+    return render(request,'blog/comment_form.html',{'form':form})
+
+@login_required
+def comment_approve(request,pk):
+    comment = get_object_or_404(Comment,pk=pk)
+    post_pk = comment.post.pk
+    comment.approve()
+    return redirect('blog:post_detail',pk=post_pk.pk)#COmmentModelのpost.pkを参照
+
+@login_required
+def comment_remove(request,pk):
+    comment = get_object_or_404(Comment,pk=pk)
+    post_pk = comment.post.pk
+    comment.delete()#Modelクラスに元々あるもの
+    return redirect('blog:post_detail',pk=post_pk)

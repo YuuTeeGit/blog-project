@@ -1,0 +1,44 @@
+
+.bubbleCloud {
+   stroke-width: 40px;
+   stroke: #4ECDC4;
+}
+
+/* base.html */
+
+.bigbrand{
+    font-size: 1.5em;
+}
+.techfont {
+    font-family: 'Balsamiq Sans', cursive;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+/* post_list.html */
+.centerstage{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* others */
+
+.postdate{
+    text-align: center;
+}
+
+.posttitle{
+    font-family: 'Balsamiq Sans', cursive;
+    font-size: 1.5em; 
+    text-align: center;   
+}
+
+.postcontent{
+    font-family: 'Montserrat';
+    font-size: 1.5em;
+}
+
+.btn-comment{
+    position: absolute;
+    right: 0px;
+}
